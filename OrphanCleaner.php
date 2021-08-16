@@ -58,8 +58,7 @@ call_user_func(
             if (strpos(strtolower($arguments[0]), $renamedTest) !== false) {
                 die('The File must be renamed, before you can use it. The name `' . $renamedTest . '` is not allowed as any part of the call of this function.');
             }
-            $herllo = count($arguments);
-            if (!((count($arguments) > 0) && (count($arguments) <= 5))) {
+            if (count($arguments) > 5) {
                 die('Wrong count of parameters: There must between one and five parameters. ');
             }
             $startName = getcwd();
