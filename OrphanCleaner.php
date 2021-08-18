@@ -23,19 +23,19 @@ namespace Porthd\Orphancleaner;
  ***************************************************************/
 
 /**
-  * Before using the script on the command line, you have to change the name of the PHP file.
-  * If you can change the name, then you probably also have the rights to access the files in the folder.
-  *
-  * Call up in the console after renaming to OrphanCleanerNeu.php
-  * php <path-to-file> / NeuOrphanCleaner --start =. / --linker = css, txt, html, sass, less, php, js, md --marker = png, gif, tif, tiff, jpeg, webp, bmp, svg --archive = <name-of-archive-folder-without-timestamp>
-  *
-  * all required
-  *
-  * --start = start directory of search.
-  * --linker = list of file extension, which contain links to files via the name of the file plus its extension. No whitespace allowed. (default = 'css, txt, html, sass, less, php, js, md'
-  * --marker = list of file extensions. The extension marks the files as orphans, which should be removed, if the are not used by the resources. No whitespace allowed.
-  * --archive = start name of archive file with moved files (optional; default =)
-  */
+ * Before using the script on the command line, you have to change the name of the PHP file.
+ * If you can change the name, then you probably also have the rights to access the files in the folder.
+ *
+ * Call up in the console after renaming to OrphanCleanerNeu.php
+ * php <path-to-file> / NeuOrphanCleaner --start =. / --linker = css, txt, html, sass, less, php, js, md --marker = png, gif, tif, tiff, jpeg, webp, bmp, svg --archive = <name-of-archive-folder-without-timestamp>
+ *
+ * all required
+ *
+ * --start = start directory of search.
+ * --linker = list of file extension, which contain links to files via the name of the file plus its extension. No whitespace allowed. (default = 'css, txt, html, sass, less, php, js, md'
+ * --marker = list of file extensions. The extension marks the files as orphans, which should be removed, if the are not used by the resources. No whitespace allowed.
+ * --archive = start name of archive file with moved files (optional; default =)
+ */
 
 define('CLEANER_DEFAULT_MOD_DIR', 755);
 define('CLEANER_DEFAULT_LINKER_LIST', ['css', 'txt', 'html', 'sass', 'less', 'php', 'js', 'md']);
@@ -54,10 +54,6 @@ call_user_func(
 
         function killProcessIfParameterFails(array $arguments): array
         {
-            $renamedTest = strtolower("OrphanCleaner.php");
-            if (strpos(strtolower($arguments[0]), $renamedTest) !== false) {
-                die('The File must be renamed, before you can use it. The name `' . $renamedTest . '` is not allowed as any part of the call of this function.');
-            }
             if (count($arguments) > 5) {
                 die('Wrong count of parameters: There must between one and five parameters. ');
             }
@@ -150,7 +146,7 @@ call_user_func(
                 $absStartPath = realpath($absStartPath);
             }
             // generade a readable and sortable timestamp for the prefix
-            $prefixStamp = (new DateTime('now'))->format('Ymd-His-');
+            $prefixStamp = (new \DateTime('now'))->format('Ymd-His-');
             $count = '';
             $rawArchivePath = $absStartPath . DIRECTORY_SEPARATOR . $prefixStamp . $archiveName;
             do {
