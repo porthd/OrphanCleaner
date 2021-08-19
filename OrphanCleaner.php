@@ -62,6 +62,7 @@ call_user_func(
             $flagStart = false;
             $flagLinker = false;
             $flagMarker = false;
+            $flagArchive = false;
             unset($arguments[0]);
             foreach ($arguments as $value) {
                 $parts = explode('=', $value, 2);
