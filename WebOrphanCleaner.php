@@ -3,9 +3,9 @@
 <head>
     <?php
 
-    $options = '';
+    $options = [];
     $success = true;
-    $fileDirectory = __DIR__;
+    $fileDirectory = $_SERVER['REQUEST_URI'];
     $start = $_REQUEST['start'] ?? getcwd();
     $start = empty($start) ? getcwd() : $start;
     $linker = trim($_REQUEST['linker'] ?? '');
@@ -37,6 +37,11 @@
         Entferne unverlinkte, verwaiste Dateien aus Ordner und seinen Unternordner
 
     </title>
+    <style>
+        .form-block {
+            margin-bottom:1rem;
+        }
+    </style>
 </head>
 
 <body>
@@ -49,39 +54,42 @@
     echo('style="background-color:red;}"');
 } ?>>
     <?php
-    echo implode('<br />', $options);
+    if (is_array($options)) {
+        echo implode('<br />', $options);
+    }
     ?>
 </div>
 <form action="" method="post">
-    <div>
-        <label for="name">Path of Folder (Empty = Webroot)<br/><em>Pfad des Ordners (Leer = Web-Ordner)</em> </label>
+    <div class="form-block">
+        <label for="name">Path of Folder (Empty = Webroot)<br/><em>Pfad des Ordners (Leer = Web-Ordner)</em> </label><br />
         <input type="text" name="start" id="start" value=""/>
     </div>
-    <div>
+    <br />
+    <div class="form-block">
         <label for="linker">comma-separated list of extension for files with resourcve-links<br/><em>Kommaseparierte
-                Liste von Extensions für Namen derDateien mit Links</em> </label>
-        <textarea type="text" name="linker" id="linker" required rows="4" cols="40">
-            css, txt, html, sass, less, php, js, md
-            </textarea>
+                Liste von Extensions für Namen derDateien mit Links</em> </label><br />
+        <textarea type="text" name="linker" id="linker" required rows="4"
+                  cols="40"
+        >css, txt, html, sass, less, php, js, md</textarea>
 
 
     </div>
-    <div>
-        <label for="archive">archive-prefixe<br/><em>Teil des Namens des Archive-Ordner</em> </label>
+    <div class="form-block">
+        <label for="archive">archive-prefixe<br/><em>Teil des Namens des Archive-Ordner</em> </label><br />
         <input type="text" name="archive" id="archive" required value="archive"/>
     </div>
-    <div>
+    <div class="form-block">
         <label for="linker">comma-separated list of extesnion of Resource-files<br/><em>Kommaseparierte Liste der
-                Extensions von Ressourcen-Dateien</em> </label>
-        <textarea type="text" name="linker" id="linker" required rows="4" cols="40">
-            m4p,mp3,ogg,wav,wmv,mov,avi,png, gif, tif, tiff, jpeg, webp, bmp, svg, pdf, ppt, docx, xls, doc, txt
-            </textarea>
+                Extensions von Ressourcen-Dateien</em> </label><br />
+        <textarea type="text" name="linker" id="linker"
+                  required rows="4" cols="40"
+        >m4p,mp3,ogg,wav,wmv,mov,avi,png, gif, tif, tiff, jpeg, webp, bmp, svg, pdf, ppt, docx, xls, doc, txt</textarea>
     </div>
-    <div>
-        <label for="spamprotect">Spamprotect 2*3*7 =<br/><em>Spam-Schutz 2*3*7</em> </label>
+    <div class="form-block">
+        <label for="spamprotect">Spamprotect 2*3*7 =<br/><em>Spam-Schutz 2*3*7</em> </label><br />
         <input type="text" name="spam" id="spam" required value="" placeholder="the answer/die Antwort"/>
     </div>
-    <div>
+    <div class="form-block"><br />
         <input type="submit" value="Remove Orphans/Entferne Waisen">
     </div>
 </form>
