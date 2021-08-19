@@ -1,8 +1,6 @@
 <?php
 declare(strict_types=1);
 
-namespace Porthd\Orphancleaner;
-
 /***************************************************************
  *
  *  Copyright notice
@@ -146,7 +144,7 @@ call_user_func(
                 $absStartPath = realpath($absStartPath);
             }
             // generade a readable and sortable timestamp for the prefix
-            $prefixStamp = (new \DateTime('now'))->format('Ymd-His-');
+            $prefixStamp = (new DateTime('now'))->format('Ymd-His-');
             $count = '';
             $rawArchivePath = $absStartPath . DIRECTORY_SEPARATOR . $prefixStamp . $archiveName;
             do {
