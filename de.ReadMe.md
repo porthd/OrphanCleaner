@@ -99,3 +99,6 @@ Das Programm kann auf bestimmten Betriebssystemen scheitern, wenn zum Beispiel d
 Jeder muss selber wissen, was er macht.
 Für Hinweise auf Programm- und/oder Rechtschreibfehler bin ich dankbar.
 
+##copyright
+(c) 2021 Dr. Dieter Porth <info@mobger.de> (PHP-Programming)
+(c) 2021 Bartosz Skowronek (Design/Frontend)

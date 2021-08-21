@@ -5,7 +5,8 @@ declare(strict_types=1);
  *
  *  Copyright notice
  *
- *  (c) 2021 Dr. Dieter Porth <info@mobger.de>
+ *  (c) 2021 Dr. Dieter Porth <info@mobger.de> (PHP-Programming)
+ *  (c) 2021 Bartosz Skowronek (Design/Frontend)
  *
  *  All rights reserved
  *
@@ -58,7 +59,10 @@ define('CLEANER_DEFAULT_MAPPER_LIST', [
     'ppt',
     'docx',
     'xls',
+    'xlsx',
     'doc',
+    'ots',
+    'ods',
     'txt',
 ]);
 define('CLEANER_DEFAULT_ORPHANS_NAME', 'orphan');
