@@ -1,2 +1,6 @@
-###
+### ignore phpstorm
 .idea
+
+### ignore datecode-Files and folders
+202*
+203*

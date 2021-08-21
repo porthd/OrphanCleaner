@@ -25,25 +25,45 @@ declare(strict_types=1);
  * If you can change the name, then you probably also have the rights to access the files in the folder.
  *
  * Call up in the console after renaming to OrphanCleanerNeu.php
- * php <path-to-file> / NeuOrphanCleaner --start =. / --linker = css, txt, html, sass, less, php, js, md --marker = png, gif, tif, tiff, jpeg, webp, bmp, svg --archive = <name-of-archive-folder-without-timestamp>
+ * php <path-to-file> / NeuOrphanCleaner --start =. / --linker = css, txt, html, sass, less, php, js, md --marker = png, gif, tif, tiff, jpeg, webp, bmp, svg --orphans = <name-of-orphans-folder-without-timestamp>
  *
  * all required
  *
  * --start = start directory of search.
  * --linker = list of file extension, which contain links to files via the name of the file plus its extension. No whitespace allowed. (default = 'css, txt, html, sass, less, php, js, md'
  * --marker = list of file extensions. The extension marks the files as orphans, which should be removed, if the are not used by the resources. No whitespace allowed.
- * --archive = start name of archive file with moved files (optional; default =)
+ * --orphans = start name of orphans file with moved files (optional; default =)
  */
 
-define('CLEANER_DEFAULT_MOD_DIR', 755);
-define('CLEANER_DEFAULT_LINKER_LIST', ['css', 'txt', 'html', 'sass', 'less', 'php', 'js', 'md']);
-define('CLEANER_DEFAULT_MAPPER_LIST', ['m4p','mp3','ogg','wav','wmv','mov','avi','png', 'gif', 'tif', 'tiff', 'jpeg', 'webp', 'bmp', 'svg', 'pdf', 'ppt', 'docx', 'xls', 'doc', 'txt']);
-define('CLEANER_DEFAULT_ARCHIVE_NAME', 'archive');
+define('CLEANER_DEFAULT_MOD_DIR', 0775); // 0775(octal) = 509(decimal) :-( what the hell
+define('CLEANER_DEFAULT_LINKER_LIST', ['css', 'txt', 'html', 'sass', 'less', 'php', 'js', 'md', 'yaml', 'yml']);
+define('CLEANER_DEFAULT_MAPPER_LIST', [
+    'm4p',
+    'mp3',
+    'ogg',
+    'wav',
+    'wmv',
+    'mov',
+    'avi',
+    'png',
+    'gif',
+    'tif',
+    'tiff',
+    'jpg',
+    'jpeg',
+    'webp',
+    'bmp',
+    'svg',
+    'pdf',
+    'ppt',
+    'docx',
+    'xls',
+    'doc',
+    'txt',
+]);
+define('CLEANER_DEFAULT_ORPHANS_NAME', 'orphan');
 call_user_func(
     function ($myArgv) {
-
-        $defaultArchiveName = 'archive';
-
 
         function myEcho($message): void
         {
@@ -58,11 +78,11 @@ call_user_func(
             $startName = getcwd();
             $linkerList = CLEANER_DEFAULT_LINKER_LIST;
             $markerList = CLEANER_DEFAULT_MAPPER_LIST;
-            $archiveName = CLEANER_DEFAULT_ARCHIVE_NAME;
+            $orphansName = CLEANER_DEFAULT_ORPHANS_NAME;
             $flagStart = false;
             $flagLinker = false;
             $flagMarker = false;
-            $flagArchive = false;
+            $flagOrphans = false;
             unset($arguments[0]);
             foreach ($arguments as $value) {
                 $parts = explode('=', $value, 2);
@@ -105,15 +125,15 @@ call_user_func(
                             }
                             $markerList = explode(',', $check);
                             break;
-                        case '--archive' :
-                            if ($flagArchive) {
-                                myEcho('Warning: The archive-name `' . $archiveName . '` will be overridden, because it is doubled.' . "\n");
+                        case '--orphans' :
+                            if ($flagOrphans) {
+                                myEcho('Warning: The orphan-name `' . $orphansName . '` will be overridden, because it is doubled.' . "\n");
                             }
                             $check = trim($parts[1]);
-                            $flagArchive = $flagArchive || (!empty($check));
-                            $archiveName = ((!empty($check)) ?
+                            $flagOrphans = $flagOrphans || (!empty($check));
+                            $orphansName = ((!empty($check)) ?
                                 $check :
-                                $archiveName);
+                                $orphansName);
                             break;
                         default:
                             myEcho('Warning: The value `` is not used. Please remove it.' . "\n");
@@ -123,11 +143,11 @@ call_user_func(
                     myEcho('Warning: The value `' . $value . '` did not contain an equual-sign `=`.' . "\n");
                 }
             }
-            return [$startName, $linkerList, $markerList, $archiveName];
+            return [$startName, $linkerList, $markerList, $orphansName];
 
         }
 
-        function transformToAbsPathOrKillOnError($startName, $archiveName)
+        function transformToAbsPathOrKillOnError($startName, $orphansName)
         {
             if (strpos($startName, DIRECTORY_SEPARATOR) === 0) {
                 if (!is_dir($startName)) {
@@ -136,7 +156,7 @@ call_user_func(
                 }
                 $absStartPath = $startName;
             } else {
-                $absStartPath = $startName . DIRECTORY_SEPARATOR ;
+                $absStartPath = $startName . DIRECTORY_SEPARATOR;
                 if (!is_dir($absStartPath)) {
                     die('The folder defined in `start` (' . $startName . ') must be defined relatively ' .
                         'to the work-folder `' . getcwd() . '`. That folder `' . $absStartPath .
@@ -147,16 +167,19 @@ call_user_func(
             // generade a readable and sortable timestamp for the prefix
             $prefixStamp = (new DateTime('now'))->format('Ymd-His-');
             $count = '';
-            $rawArchivePath = $absStartPath . DIRECTORY_SEPARATOR . $prefixStamp . $archiveName;
+            $rawOrphansPath = $absStartPath . DIRECTORY_SEPARATOR . $prefixStamp . $orphansName;
             do {
-                $absArchivePath = $rawArchivePath . $count;
+                $absOrphansPath = $rawOrphansPath . $count;
                 $count++;
-            } while (is_dir($absArchivePath));
-
-            if (!mkdir($absArchivePath, CLEANER_DEFAULT_MOD_DIR, true) && !is_dir($absArchivePath)) {
-                die('The archive-folder `' . $absArchivePath . '` could not be created. Check the user-rights.');
+            } while (is_dir($absOrphansPath));
+            if (!is_dir($absOrphansPath)) {
+                if (!mkdir($absOrphansPath, CLEANER_DEFAULT_MOD_DIR, true) &&
+                    !is_dir($absOrphansPath)
+                ) {
+                    die('The orphans-folder `' . $absOrphansPath . '` could not be created. Check the user-rights.');
+                }
             }
-            return [$absStartPath, $absArchivePath];
+            return [$absStartPath, $absOrphansPath];
         }
 
         function findRecursiveAllFileByExt(
@@ -176,8 +199,8 @@ call_user_func(
                                 $files
                             );
                         } else {
-                            $ext = strtolower(pathinfo($name,PATHINFO_EXTENSION));
-                            if (in_array($ext,$orphanExt)) {
+                            $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+                            if (in_array($ext, $orphanExt)) {
                                 $files[] = $folder . DIRECTORY_SEPARATOR . $name;
                             }
                         }
@@ -208,8 +231,8 @@ call_user_func(
         function parseFilesForNames($listOfLinkerFile, $listOfResonrceNames)
         {
             if (empty($listOfLinkerFile)) {
-                die('There is no file, which will check the orphans. The orphan-file are move into `' .
-                    CLEANER_DEFAULT_ARCHIVE_NAME . '`');
+                die('There is no file, which will check the orphans. The orphan-files are move into `' .
+                    CLEANER_DEFAULT_ORPHANS_NAME . '`');
             }
             foreach ($listOfLinkerFile as $fileName) {
                 $test = file_get_contents($fileName);
@@ -225,9 +248,9 @@ call_user_func(
             return $listOfResonrceNames;
         }
 
-        function moveFileToArchive(
+        function moveFileToOrphans(
             string $startFolder,
-            string $archiveFolder,
+            string $orphansFolder,
             array $reduceNameList,
             array $listResource
         ) {
@@ -237,23 +260,30 @@ call_user_func(
                     foreach ($listResource[$key] as $filePath) {
                         $sourcePath = $filePath;
                         if (!file_exists($sourcePath)) {
-                            myEcho('WARNING-WARNING: There file `' . $filePath . '` is no longer avaibale in the folder `' . $startFolder .
+                            myEcho('WARNING-WARNING: There file `' . $filePath . '` is no longer available in the folder `' . $startFolder .
                                 '`. There may work other processes, which have removed the file.`');
                         } else {
                             $reducedFilePath = substr($filePath, $startFolderLength);
                             $pathInfo = pathinfo($reducedFilePath);
-                            $destPath = $archiveFolder . $pathInfo['dirname']. DIRECTORY_SEPARATOR ;
+                            $destPath = $orphansFolder . $pathInfo['dirname'] . DIRECTORY_SEPARATOR;
                             if (!is_dir($destPath)) {
-                                if ((!mkdir($destPath, CLEANER_DEFAULT_MOD_DIR, true)) &&
-                                    (!is_dir($destPath))
-                                ) {
-                                    die('The creation of the folder `'.$destPath.'` failed. A file with the same name exists.');
+                                $list = explode(DIRECTORY_SEPARATOR, $destPath);
+                                $fullPath = '';
+                                foreach ($list as $partPath) {
+                                    if ((!empty($partPath)) && (!is_dir($fullPath))) {
+                                        $fullPath .= DIRECTORY_SEPARATOR . $partPath;
+                                        if ((!mkdir($fullPath, CLEANER_DEFAULT_MOD_DIR, true)) &&
+                                            (!is_dir($fullPath))
+                                        ) {
+                                            die('The creation of the folder `' . $destPath . '` failed. A file with the same name exists.');
+                                        }
+                                    }
                                 }
                             }
-                            $destPathFile = $destPath.$pathInfo['basename'];
+                            $destPathFile = $destPath . $pathInfo['basename'];
                             if (!rename($sourcePath, $destPathFile)) {
                                 myEcho('WARNING-WARNING: There file `' . $sourcePath . '` could not renamed to `' . $destPath .
-                                    '`. Check the Rights of the Source-file. Perhaps there are parallel processes, which disturb the current process.');
+                                    '`. Check the rights of the source-file. Perhaps there are parallel processes, which disturb the current process.');
 
                             }
                         }
@@ -266,7 +296,7 @@ call_user_func(
             string $startFolder,
             array $linkerList,
             array $orphanExtList,
-            string $archiveFolder
+            string $orphansFolder
         ) {
             $listResourceRaw = [];
             findRecursiveAllFileByExt($startFolder, $orphanExtList, $listResourceRaw);
@@ -275,22 +305,22 @@ call_user_func(
             $linkerFileList = [];
             findRecursiveAllFileByExt($startFolder, $linkerList, $linkerFileList);
             $reduceNameList = parseFilesForNames($linkerFileList, $resourceFileList);
-            moveFileToArchive($startFolder, $archiveFolder, $reduceNameList, $listResource);
+            moveFileToOrphans($startFolder, $orphansFolder, $reduceNameList, $listResource);
         }
 
         // Parse
         try {
-            [$startName, $linkerList, $markerList, $archiveName] = killProcessIfParameterFails(
+            [$startName, $linkerList, $markerList, $orphansName] = killProcessIfParameterFails(
                 $myArgv
             );
-            [$absStartPath, $absArchivePath] = transformToAbsPathOrKillOnError($startName, $archiveName);
-            parseOrphanFilesinCode($absStartPath, $linkerList, $markerList, $absArchivePath);
+            [$absStartPath, $absOrphansPath] = transformToAbsPathOrKillOnError($startName, $orphansName);
+            parseOrphanFilesinCode($absStartPath, $linkerList, $markerList, $absOrphansPath);
         } catch (\Exception $e) {
             die('The removing of orphan-files could not successfully solved. An exception was thrown. ' .
                 'The message was:' . $e->getMessage());
         }
 
-        die('Your cleanup was succesful. The orphan-file are move into `' . $defaultArchiveName . '`');
+        die('Your cleanup was successful. The orphan-file are move into `' . $orphansName . '`');
     },
     $argv // not options, only use the raw Arguments
 );
