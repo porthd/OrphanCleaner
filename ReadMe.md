@@ -101,6 +101,6 @@ The program can fail on certain operating systems if, for example, the php has i
 Everyone has to know for themselves what they are doing.
 I am grateful for any references to program errors and/or spelling errors.
 
-##copyright
+## copyright
 (c) 2021 Dr. Dieter Porth <info@mobger.de> (PHP-Programming)
 (c) 2021 Bartosz Skowronek (Design/Frontend)
