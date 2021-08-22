@@ -65,6 +65,7 @@
         $output[] = '<<< Output-Code ende';
     }
     ?>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg enable-background='new 0 0 368 392' viewBox='0 0 368 392' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m196.5 196 116-65 49.1-27.5c-32.1-58.1-94-97.5-165.1-97.5-104.1 0-188.5 84.4-188.5 188.5s84.4 188.5 188.5 188.5c68.4 0 128.3-36.4 161.3-91l-47.1-28zm42.5-134c9.4 0 17 7.6 17 17s-7.6 17-17 17-17-7.6-17-17 7.6-17 17-17z' fill='%23ff0'/%3E%3C/svg%3E" type="image/svg+xml" />
     <title>
         displace unlinked orphan-files  &#10;from its folder recursively &#10;
         <em>Verschiebe unverlinkte Dateiwaisen rekursiv aus dem Ordner </em>
@@ -75,6 +76,7 @@
             width: 100%;
             background-color: #000;
             color: yellow;
+            overflow-x: hidden;
             font-size: 14px;
             font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
         }
@@ -82,8 +84,8 @@
         .wrapper {
             position: relative;
             max-width: 1900px;
-            min-height: 45vh;
             overflow-x: hidden;
+            min-height: 45vh;
             animation: opener 3s both;
         }
 
@@ -111,11 +113,7 @@
             padding: 0 0 5px 0;
         }
 
-        .title > em {
-            display: inline;
-        }
-
-        .pacman {
+       .pacman {
             width: clamp(3rem, 23vw, 25rem);
             height: clamp(3rem, 23vw, 25rem);
             top: 10%;
@@ -131,7 +129,6 @@
             }
 
             to {
-                /* clip-path: polygon(100% 50%, 46% 50%, 100% 50%); */
                 transform: translateX(0);
             }
         }
@@ -178,7 +175,6 @@
                 background-color: #000;
             }
 
-
             75% {
                 background-color: #000;
             }
@@ -201,8 +197,7 @@
             }
 
             to {
-                /* clip-path: polygon(100% 50%, 46% 50%, 100% 50%); */
-                clip-path: polygon(100% 0, 55% 50%, 100% 100%);
+              clip-path: polygon(100% 0, 55% 50%, 100% 100%);
             }
         }
 
@@ -261,16 +256,12 @@
             to {
                 transform: translateX(0);
                 opacity: 0;
-
             }
         }
 
         @keyframes eatingred {
             from {
                 transform: translateX(150vw);
-            }
-            85% {
-
             }
             93% {
                 opacity: 1;
@@ -348,7 +339,7 @@
         }
         .btn {
             display: block;
-            padding:  5%;
+            padding:  .8em;
             color: white;
             font-size: 2rem;
             background: red;
@@ -356,8 +347,20 @@
             border: 0;
             font-weight: 700;
             cursor: pointer;
-            width: 45%;
             font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+        }
+
+        .btn:hover {
+            animation: pulse 1.3s infinite ease-in alternate both;
+        }
+
+        @keyframes pulse {
+            from {
+                background: red;
+            }
+            to {
+                background: #f00c;
+            }
         }
 
         .form-block a.button {
@@ -378,13 +381,11 @@
 
     </h2>
 
-    <a href="https://www.youtube.com/watch?v=1k_DF_RohcM">
+    <a href="https://www.youtube.com/watch?v=1k_DF_RohcM" target="_blank" rel="noopener noreferrer">
         <div class="pacman">
             <div class="food">
                 <div class="icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width=" " height=" " fill=""
-                         class="funny bi bi-file-code" viewBox="0 0 16 16"
-                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="funny" viewBox="0 0 16 16">
                         <path
                                 d="M6.646 5.646a.5.5 0 1 1 .708.708L5.707 8l1.647 1.646a.5.5 0 0 1-.708.708l-2-2a.5.5 0 0 1 0-.708l2-2zm2.708 0a.5.5 0 1 0-.708.708L10.293 8 8.646 9.646a.5.5 0 0 0 .708.708l2-2a.5.5 0 0 0 0-.708l-2-2z"/>
                         <path
@@ -392,9 +393,7 @@
                     </svg>
                 </div>
                 <div class="icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width=" " height=" " fill=""
-                         class="funny bi bi-file-earmark-medical" viewBox="0 0 16 16"
-                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="funny" viewBox="0 0 16 16">
                         <path
                                 d="M7.5 5.5a.5.5 0 0 0-1 0v.634l-.549-.317a.5.5 0 1 0-.5.866L6 7l-.549.317a.5.5 0 1 0 .5.866l.549-.317V8.5a.5.5 0 1 0 1 0v-.634l.549.317a.5.5 0 1 0 .5-.866L8 7l.549-.317a.5.5 0 1 0-.5-.866l-.549.317V5.5zm-2 4.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 2a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5z"/>
                         <path
@@ -402,9 +401,7 @@
                     </svg>
                 </div>
                 <div class="icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width=" " height=" " fill=""
-                         class="funny bi bi-file-earmark-pdf" viewBox="0 0 16 16"
-                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="funny" viewBox="0 0 16 16">
                         <path
                                 d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
                         <path
@@ -412,9 +409,7 @@
                     </svg>
                 </div>
                 <div class="icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width=" " height=" " fill=""
-                         class="funny bi bi-file-earmark-slides" viewBox="0 0 16 16"
-                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="funny" viewBox="0 0 16 16">
                         <path
                                 d="M5 6a.5.5 0 0 0-.496.438l-.5 4A.5.5 0 0 0 4.5 11h3v2.016c-.863.055-1.5.251-1.5.484 0 .276.895.5 2 .5s2-.224 2-.5c0-.233-.637-.429-1.5-.484V11h3a.5.5 0 0 0 .496-.562l-.5-4A.5.5 0 0 0 11 6H5zm2 3.78V7.22c0-.096.106-.156.19-.106l2.13 1.279a.125.125 0 0 1 0 .214l-2.13 1.28A.125.125 0 0 1 7 9.778z"/>
                         <path
@@ -422,18 +417,14 @@
                     </svg>
                 </div>
                 <div class="icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width=" " height=" " fill=""
-                         class="funny bi bi-file-image" viewBox="0 0 16 16"
-                    >
+                    <svg xmlns="http://www.w3.org/2000/svg"  class="funny" viewBox="0 0 16 16">
                         <path d="M8.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
                         <path
                                 d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v8l-2.083-2.083a.5.5 0 0 0-.76.063L8 11 5.835 9.7a.5.5 0 0 0-.611.076L3 12V2z"/>
                     </svg>
                 </div>
                 <div class="icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width=" " height=" " fill=""
-                         class="funny bi bi-file-earmark-word" viewBox="0 0 16 16"
-                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="funny" viewBox="0 0 16 16">
                         <path
                                 d="M5.485 6.879a.5.5 0 1 0-.97.242l1.5 6a.5.5 0 0 0 .967.01L8 9.402l1.018 3.73a.5.5 0 0 0 .967-.01l1.5-6a.5.5 0 0 0-.97-.242l-1.036 4.144-.997-3.655a.5.5 0 0 0-.964 0l-.997 3.655L5.485 6.88z"/>
                         <path
@@ -441,9 +432,7 @@
                     </svg>
                 </div>
                 <div class="icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width=" " height=" " fill=""
-                         class="funny bi bi-file-earmark-richtext" viewBox="0 0 16 16"
-                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="funny" viewBox="0 0 16 16">
                         <path
                                 d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
                         <path
@@ -454,10 +443,14 @@
         </div>
     </a>
 </div>
+
+<form action="" method="post">
+
 <h2 class="output">
     Message from previous action
     <em>Meldungen von vorheriger Aktion</em>
 </h2>
+
 <div class="row">
     <div <?php if (!$success) {
         echo 'style="background-color:red;}"';
@@ -482,7 +475,7 @@
     </div>
 </div>
 
-<form action="" method="post">
+
     <div class="row">
         <div class="form-block">
             <label for="start">path of folder (empty = web-root)<br/><em>Pfad des Ordners (leer = Web-Ordner)</em>
@@ -501,8 +494,7 @@
             <label for="linker">comma-separated list of extensions of files with links to resources<br/><em>Kommaseparierte
                     Liste von Extensions der Dateien mit Links zu Ressourcen</em> </label><br/>
             <textarea name="linker" id="linker" required rows="4"
-                      cols="40"
-            >css,sass,less, php,html,htm,xml,  js,ts,json,yaml,yml,  txt,rst,md</textarea>
+                      cols="40">css,sass,less,php,html,htm,xml,js,ts,json,yaml,yml,txt,rst,md</textarea>
         </div>
 
         <div class="form-block">
