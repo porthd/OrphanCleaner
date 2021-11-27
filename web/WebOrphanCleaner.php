@@ -494,7 +494,7 @@
             <label for="linker">comma-separated list of extensions of files with links to resources<br/><em>Kommaseparierte
                     Liste von Extensions der Dateien mit Links zu Ressourcen</em> </label><br/>
             <textarea name="linker" id="linker" required rows="4"
-                      cols="40">css,sass,less,php,html,htm,xml,js,ts,json,yaml,yml,txt,rst,md</textarea>
+                      cols="40">css,sass,less,php,xhtml,html,htm,xml,js,ts,json,yaml,yml,txt,rst,md,typoscript,t3s,t3c</textarea>
         </div>
 
         <div class="form-block">
