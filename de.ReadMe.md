@@ -26,6 +26,11 @@ wird `OrphanCleaner.php` aufgerufen und ausgeführt.
 ### Ordner `.ddev`
 Ich nutze als lokale Entwicklungsumgebung [DDEV](https://ddev.readthedocs.io/en/stable/), die auf [Docker](https://www.docker.com/products/docker-desktop) aufbaut.
 Der Ordner enthält die genutzte Konfiguration.
+### Hinweis: identische Dateien 
+Die Dateien ``OrphanCleaner.php`` und ``WebOrphanCleaner.php`` im Root-verzeichnis bzw.im Ordner ``web`` sind identisch. 
+Sollten sie es nicht sein, dann wenden sie sich bitte an den Entwickler, um zu klären, welche die richtig ist.
+nach dem Aufruf in der Konsole/PowerShell/Bash/Terminal von `ddev start` können sie im Browser `https://orphancleaner.ddev.site/weborphancleaner.php` aufrufen, um durch Angabe eine relativ verfügbaren Ordners wie zum Beispiel `../Test` eine Orphan-Dtai-Entfernung durchführen zu können.
+
 
 ### Vorbereitung
 1. Hinweis wegen Alter Version: Die Umbenennung ist nicht länger erforderlich, weil sie keinen wirklichen zusätzlichen Schutz bietet.
