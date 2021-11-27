@@ -502,7 +502,7 @@
                     Extensions der Ressourcen-Dateien</em> </label><br/>
             <textarea name="marker" id="marker"
                       required rows="4" cols="40"
-            >m4p,mp3,ogg,wav,wmv,mov,avi, csv,json, png,gif,tif,tiff,jpeg,jpg,webp,bmp,svg, pdf,ppt,docx,doc,odt,xls,xlsx,ods,txt</textarea>
+            >mp4,mp3,ogg,wav,wmv,mov,avi, csv,json, png,gif,tif,tiff,jpeg,jpg,webp,bmp,svg, pdf,ppt,docx,doc,odt,xls,xlsx,ods,txt</textarea>
         </div>
     </div>
 
