@@ -3,9 +3,9 @@
 
 ## Allgemeines
 ### Abstract
-Das Script verschiebt alle `Waisen`-Dateien mit bestimmten `Marker`-Extensions unterhalb eines `Start`-Ordners in einen `Oprhans`-Ordner,
-wenn diese Marker-Dateien keinmal in Dateien mit `Linker`-Extension genannt wurden.
-Die Dateien inklusiver der Ordnerstrukturen gehen nicht verloren nach ihrer Verschiebung.
+Das Script verschiebt alle `Waisen`-Dateien mit bestimmten `Marker`-Extensions unterhalb eines `Start`-Ordners in einen `Orphans`-Ordner,
+wenn diese Marker-Dateien keinmal/nie in Dateien genannt wurden, die eine in `Linker` definierte Extension aufweisen.
+Die Dateien inklusiver der Ordnerstrukturen gehen nicht verloren. Sie werden inklusive ihrer bisherigen Ordnerstruktur nur verschoben.
 
 ### Was tut die php-Datei `OrphanCleaner.php`
 Das php-Programm erfasst alle Dateien, die eine der bei `--marker=` angegebenen Extensionen in ihrem Dateinamen haben.
@@ -53,7 +53,12 @@ Das Hauptprogramm wie das Webformular kennt 4 Parameter.
     * Funktion: Teil des Namen des Ordners, in welches ungenutzte Dateien verschoben werden.
       Der vollständige Ordnername besteht aus einem Datum-Zeit-Code, dem hier erwähnten Namen und einer Nummer.
       Er hätte z.B. am 15. Aug. 2021 un 15:53:21 das folgende Aussehen: `20210815-155324-orphans_0/`.
-
+* --boxunicase
+    * Default: true
+    * Funktion: Wenn es auf true gesetzt ist, dürfen die 26 Buchstaben von A-Z in der Groß- und Kleinschreibung variieren.
+      Eine Datei mit dem Namen Test.jpg wird also NICHT verschoiben, wenn irgendwo ein Link mit 'test.JPG' oder 'test.jpg' zu finden ist.
+      Wenn der Wert auf false gesetzt ist, wird auf gleiche Groß- und Kleinschreibung in Link und Dateinamen geachtet.
+  
 Im Webformular muss man noch das Feld mit der ultimativen Berechnung für die Frage aller Fragen ausfüllen, damit das Hauptprogramm gestartet wird. (Schutz dagegen, dass der Finger mal wieder schneller klickt als der Developer denken kann.)
 
 ### Die verschobenen Dateien

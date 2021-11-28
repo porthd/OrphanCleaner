@@ -19,3 +19,5 @@ LinkerAll.wav
 LinkerAll.webp
 LinkerAll.xls
 LinkerAll.xlsx
+
+case_insensitive_allowed.svg  // Will only selected, if case-insensitive /ignore-upper-and-lower-casecaseis is selected

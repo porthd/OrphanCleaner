@@ -40,6 +40,7 @@
     $linker = preg_replace('/\s+/', '', $_REQUEST['linker'] ?? '');
     $marker = preg_replace('/\s+/', '', $_REQUEST['marker'] ?? '');
     $orphans = preg_replace('/\s+/', '', $_REQUEST['orphans'] ?? '');
+    $boxUniCase = preg_replace('/\s+/', '', $_REQUEST['boxunicase'] ?? '');
     $spam = (int)($_REQUEST['spam'] ?? 0);
     $fileName = 'OrphanCleaner.php';
     $absFilePath = getcwd() . DIRECTORY_SEPARATOR . $fileName;
@@ -55,7 +56,7 @@
 
         $output = ['Output-Code beginn >>>'];
         $execCmd = escapeshellcmd(
-            "php $absFilePath --start=$start --linker=$linker --marker=$marker --orphans=$orphans"
+            "php $absFilePath --start=$start --linker=$linker --marker=$marker --orphans=$orphans --boxunicase=$boxUniCase"
         );
         $success = (exec(
                 $execCmd,
@@ -367,6 +368,53 @@
             text-decoration: none;
         }
 
+        /*https://dev.to/proticm/styling-html-checkboxes-is-super-easy-302o*/
+        .checkbox {
+            display: inline-flex;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .checkbox > span {
+            color: yellow;
+            padding: 0.5rem 0.25rem;
+        }
+
+        .checkbox > input {
+            height: 25px;
+            width: 25px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            -o-appearance: none;
+            appearance: none;
+            border: 1px solid red;
+            border-radius: 4px;
+            outline: none;
+            transition-duration: 0.3s;
+            background-color: yellow;
+            cursor: pointer;
+        }
+
+        .checkbox > input:checked {
+            border: 1px solid red;
+            background-color: red;
+        }
+
+        .checkbox > input:checked + span::before {
+            content: '\2713';
+            display: block;
+            text-align: center;
+            color: yellow;
+            position: absolute;
+            left: 0.7rem;
+            top: 0.2rem;
+        }
+
+        .checkbox > input:active {
+            border: 2px solid red;
+        }
+
+
     </style>
 
 
@@ -505,8 +553,15 @@
             >mp4,mp3,ogg,wav,wmv,mov,avi, csv,json, png,gif,tif,tiff,jpeg,jpg,webp,bmp,svg, pdf,ppt,docx,doc,odt,xls,xlsx,ods,txt</textarea>
         </div>
     </div>
-
     <div class="row">
+        <div class="form-block">
+            <br/>
+            <label for="boxunicase" class="checkbox">
+                <input type="hidden" name="boxunicase" value="false" />
+                <input type="checkbox" name="boxunicase" id="boxunicase"  checked="checked" value="true" />
+                <span>variation of upper- and lowercase allowed in filename and linked name<br/><em>Groß- und Kleinschreibung darf bei Dateinnamen und Link  variieren</em></span>
+            </label>
+        </div>
         <div class="form-block">
             <label for="spam">Calculate correct 2*3*7 = 6*7 =<br/><em>Rechne richtig 2*3*7 = 6*7 =</em>
             </label>

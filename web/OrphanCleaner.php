@@ -36,6 +36,7 @@ declare(strict_types=1);
  * --orphans = start name of orphans file with moved files (optional; default =)
  */
 
+define('CLEANER_DEFAULT_BOX_UNICASE', 'true');
 define('CLEANER_DEFAULT_MOD_DIR', 0775); // 0775(octal) = 509(decimal) :-( what the hell
 define('CLEANER_DEFAULT_LINKER_LIST', ['css', 'txt', 'html', 'sass', 'less', 'php', 'js', 'md', 'yaml', 'yml']);
 define('CLEANER_DEFAULT_MAPPER_LIST', [
@@ -74,35 +75,50 @@ call_user_func(
             echo $message;
         }
 
+        function checkFlagUnicase($check){
+            return in_array($check,[true,1,'1','true'],true);
+        }
+
         function killProcessIfParameterFails(array $arguments): array
         {
-            if (count($arguments) > 5) {
-                die('Wrong count of parameters: There must between one and five parameters. ');
+            if (count($arguments) > 6) {
+                die('Wrong count of parameters: There must between one and six parameters. ');
             }
             $startName = getcwd();
             $linkerList = CLEANER_DEFAULT_LINKER_LIST;
             $markerList = CLEANER_DEFAULT_MAPPER_LIST;
             $orphansName = CLEANER_DEFAULT_ORPHANS_NAME;
+            $boxUniCase = CLEANER_DEFAULT_BOX_UNICASE;
+            $flagUniCase = checkFlagUnicase($boxUniCase);
             $flagStart = false;
             $flagLinker = false;
             $flagMarker = false;
             $flagOrphans = false;
+            $flagCase = false;
             unset($arguments[0]);
             foreach ($arguments as $value) {
                 $parts = explode('=', $value, 2);
                 if (count($parts) == 2) {
 
                     switch ($parts[0]) {
+                        case '--boxunicase' :
+                            if ($flagCase) {
+                                myEcho('Warning: The value for boxUniCase `' . (empty($boxUniCase)?'leer':$boxUniCase) . '` will be overridden, because it is doubled.' . "\n");
+                            }
+                            $check = strtolower( trim($parts[1]));
+                            $flagCase = $flagCase || (true);
+                            $flagUniCase = checkFlagUnicase($check);
+                            break;
                         case '--start' :
-                            if ($flagStart) {
+                        if ($flagStart) {
                                 myEcho('Warning: The start-name `' . $startName . '` will be overridden, because it is doubled.' . "\n");
                             }
-                            $check = trim($parts[1]);
-                            $flagStart = $flagStart || (!empty($check));
-                            $startName = ((!empty($check)) ?
+                        $check = trim($parts[1]);
+                        $flagStart = $flagStart || (!empty($check));
+                        $startName = ((!empty($check)) ?
                                 $check :
                                 $startName);
-                            break;
+                        break;
                         case '--linker' :
                             if ($flagLinker) {
                                 myEcho('Warning: The linkerlist `' . print_r($linkerList) . '` will be overridden, because it is doubled.' . "\n");
@@ -147,7 +163,7 @@ call_user_func(
                     myEcho('Warning: The value `' . $value . '` did not contain an equual-sign `=`.' . "\n");
                 }
             }
-            return [$startName, $linkerList, $markerList, $orphansName];
+            return [$startName, $linkerList, $markerList, $orphansName, $flagUniCase];
 
         }
 
@@ -233,7 +249,7 @@ call_user_func(
             return $result;
         }
 
-        function parseFilesForNames($listOfLinkerFile, $listOfResonrceNames)
+        function parseFilesForCaseSensitiveNames($listOfLinkerFile, $listOfResonrceNames)
         {
             if (empty($listOfLinkerFile)) {
                 die('There is no file, which will check the orphans. The orphan-files are move into `' .
@@ -246,6 +262,27 @@ call_user_func(
                     $listOfResonrceNames,
                     function ($v) use ($test) {
                         return (strpos($test, $v) === false);
+                    }
+                );
+                unset($test);
+            }
+            return $listOfResonrceNames;
+        }
+
+        function parseFilesForUniCaseNames($listOfLinkerFile, $listOfResonrceNames)
+        {
+            if (empty($listOfLinkerFile)) {
+                die('There is no file, which will check the orphans. The orphan-files are move into `' .
+                    CLEANER_DEFAULT_ORPHANS_NAME . '`');
+            }
+            foreach ($listOfLinkerFile as $fileName) {
+                $test = file_get_contents($fileName);
+                // reduce the list, if one value of the list is contained in the testStream
+                $listOfResonrceNames = array_filter(
+                    $listOfResonrceNames,
+                    function ($v) use ($test) {
+                        $pattern = '/'.$v.'/i';
+                        return (empty(preg_match($pattern, $test)));
                     }
                 );
                 unset($test);
@@ -304,7 +341,8 @@ call_user_func(
             string $startFolder,
             array  $linkerList,
             array  $orphanExtList,
-            string $orphansFolder
+            string $orphansFolder,
+            $flagUniCase = false
         )
         {
             $listResourceRaw = [];
@@ -313,17 +351,21 @@ call_user_func(
             $resourceFileList = array_keys($listResource);
             $linkerFileList = [];
             findRecursiveAllFileByExt($startFolder, $linkerList, $linkerFileList);
-            $reduceNameList = parseFilesForNames($linkerFileList, $resourceFileList);
+            if ($flagUniCase) {
+                $reduceNameList = parseFilesForUniCaseNames($linkerFileList, $resourceFileList);
+            } else {
+                $reduceNameList = parseFilesForCaseSensitiveNames($linkerFileList, $resourceFileList);
+            }
             moveFileToOrphans($startFolder, $orphansFolder, $reduceNameList, $listResource);
         }
 
         // Parse
         try {
-            [$startName, $linkerList, $markerList, $orphansName] = killProcessIfParameterFails(
+            [$startName, $linkerList, $markerList, $orphansName,$flagUniCase] = killProcessIfParameterFails(
                 $myArgv
             );
             [$absStartPath, $absOrphansPath] = transformToAbsPathOrKillOnError($startName, $orphansName);
-            parseOrphanFilesinCode($absStartPath, $linkerList, $markerList, $absOrphansPath);
+            parseOrphanFilesinCode($absStartPath, $linkerList, $markerList, $absOrphansPath,$flagUniCase);
         } catch (\Exception $e) {
             die('The removing of orphan-files could not successfully solved. An exception was thrown. ' .
                 'The message was:' . $e->getMessage());
